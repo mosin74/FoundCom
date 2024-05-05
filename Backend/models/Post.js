@@ -1,5 +1,8 @@
 const mongoose=require('mongoose')
 
+
+//Post schema is created 
+
 const postSchema= new mongoose.Schema({
     caption:String,
 
