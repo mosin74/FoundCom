@@ -138,3 +138,187 @@ try {
 }
    
 }
+
+exports.getpost= async(req,res)=>{
+
+    try {
+
+    // ==> This is 1 approch 
+    //   const user=await User.findById(req.user._id).populate("following","posts")
+    // //   const post=await Post.find({})
+    // res.status(200).json({
+    //     success:true,
+    //     // user
+    //     following:user.following
+    // })
+
+    // ==> This is 2 approch 
+      const user=await User.findById(req.user._id);
+      const posts=await Post.find({
+        Owner:{
+            $in:user.following
+        }
+        })
+        res.status(200).json({
+            success:true,
+            posts
+        })
+
+
+
+        
+    } catch (error) {
+
+        return res.status(500).json({
+            sucess:false,
+            message:error.message
+        })
+
+    }
+}
+
+
+exports.updateCaption = async(req,res)=>{
+  try {
+    const post=await Post.findById(req.params.id)
+    if(!post){
+        return res.status(404).json({
+            success:false,
+            message:"Post not exists"
+        })
+    }
+    if(post.Owner.toString()!==req.user._id.toString()){
+        return res.status(404).json({
+            success:false,
+            message:"Unauthorised"
+        })
+    }
+    
+    post.caption=req.body.caption;
+    await post.save();
+    console.log(post.caption)
+    
+    res.status(200).json({
+        success:true,
+        message:"Caption updated"
+
+    })
+  } catch (error) {
+    return res.status(500).json({
+        sucess:false,
+        message:error.message
+    })
+  }
+}
+
+
+
+//Add and update comment 
+exports.AddComments = async(req,res)=>{
+    try {
+    const post=await Post.findById(req.params.id);
+
+    if(!post){
+         return res.status(404).json({
+               success:false,
+               message:"Post not found"
+         })
+    }
+
+    //Updating comment if already comment is present 
+ const commentFound= post.comments.find(comment=>comment.user=req.user._id);
+
+    if(commentFound){
+       commentFound.comment=req.body.comment;
+       await post.save();
+       return res.status(200).json({
+        success:true,
+        message:"caption updated"
+       })
+    }
+
+    //If commenct not present then it is posted 
+    else{
+        post.comments.push({
+            user:req.user._id,
+            comment:req.body.comment,
+        });
+
+        await post.save();
+
+        return res.status(200).json({
+            success:true,
+            message:"Comment is added"
+        })
+    }
+
+
+    // If any error this will throw error   
+    } catch (error) {
+        return res.status(500).json({
+            sucess:false,
+            message:error.message
+        })
+    }
+
+}
+
+
+
+//Remove from fllowers following left 
+
+exports.deletMyProfile = async (req,res)=>{
+    try {
+
+        const user = await User.findById(req.user._id);
+
+        //This delete all post of user
+        await Post.deleteMany({Owner:req.user._id});
+        
+        //Log OutUser
+        const option={
+            expires:new Date(Date.now()),
+            httpOnly:true
+        }
+        res.cookie("token",null,option);
+
+        //Deleting User
+        await user.deleteOne()
+
+        //Sending response 
+        res.status(200).json({
+            sucess:true,
+            message:"User and all post are deleted"
+        })
+        // await user.deleteOne();
+
+        
+        
+        
+    } catch (error) {
+
+        return res.status(500).json({
+            sucess:false,
+            message:error.message
+        })
+    }
+}
+
+
+exports.getUserProfile = async(req,res)=>{
+try {
+    const user= await User.findById(req.user._id).populate("posts");
+
+    res.status(200).json({
+        success:true,
+        user,
+    })
+    
+} catch (error) {
+    return res.status(500).json({
+        sucess:false,
+        message:error.message
+    })
+}
+
+}

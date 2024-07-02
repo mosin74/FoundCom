@@ -16,6 +16,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.3",
-    "package-changed": "^3.0.0"
+    "package-changed": "^3.0.0",
+    "react-router-dom": "^6.24.0"
   }
 }
