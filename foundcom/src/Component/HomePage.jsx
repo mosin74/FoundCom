@@ -9,6 +9,7 @@ import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAllPost } from '../Actions/User';
+import logo from '../Images/logo.png'
 
 const HomePage = () => {
 
@@ -23,9 +24,9 @@ const HomePage = () => {
     return (
         <>
             <div className=' flex mx-2 bg-gray-600 '>
-                <div id="LeftPortion" className=' border  w-2/12 text-white'>
-                    <ul className=' mx-4 '>
-                        <img src='' alt='FOUNDCOM' className=' w-32 h-20 bg-slate-400'></img>
+                <div id="LeftPortion" className=' border  w-2/12 text-white '>
+                    <ul className=' mx-4 fixed '>
+                        <img src={logo} alt='FOUNDCOM' className=' w-48 m-[22]]'></img>
                         <Link to='/'><li className='p-2'> <HomeOutlinedIcon /> <span>Home</span></li></Link>
                         <Link to='/' ><li className='p-2'><SearchOutlinedIcon /> <span>Search</span></li></Link>
                         <Link to='/'  ><li className='p-2'><MessageOutlinedIcon /> <span>Message</span></li></Link>
