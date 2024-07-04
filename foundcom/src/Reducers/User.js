@@ -12,6 +12,9 @@ const RegisterFailure = createAction('RegisterFailure')
 const LoadUserRequest = createAction('LoadUserRequest')
 const LoadUserSuccess = createAction('LoadUserSuccess')
 const LoadUserFailure = createAction('LoadUserFailure')
+const AllPostLoadRequest=createAction('AllPostLoadRequest')
+const AllPostLoadSuccess=createAction('AllPostLoadSuccess')
+const AllPostLoadFailure=createAction('AllPostLoadFailure')
 
 
 
@@ -70,4 +73,19 @@ export const userReducer = createReducer(initialstate, builder => {
 
         })
 
+})
+
+export const postofFollowing=createReducer( initialstate , builder=>{
+    builder
+    .addCase(AllPostLoadRequest ,(state)=>{
+        state.loading=true
+    })
+    .addCase(AllPostLoadSuccess ,(state,action)=>{
+        state.loading=false;
+        state.posts=action.payload
+    })
+    .addCase(AllPostLoadFailure,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload
+    })
 })

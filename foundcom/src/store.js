@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userReducer } from "./Reducers/User";
+import { postofFollowing, userReducer } from "./Reducers/User";
 const store = configureStore({
     reducer:{
         user:userReducer,
+        feed:postofFollowing
     }
 });
 
