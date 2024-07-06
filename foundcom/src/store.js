@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { postofFollowing, userReducer } from "./Reducers/User";
+import { postofFollowing, userReducer ,likeAndDislike} from "./Reducers/User";
+// import { likeAndDislike } from "./Actions/User";
 const store = configureStore({
     reducer:{
         user:userReducer,
-        feed:postofFollowing
+        feed:postofFollowing,
+        like:likeAndDislike
     }
 });
 

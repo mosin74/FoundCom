@@ -8,11 +8,33 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { likeAndDislike } from '../Actions/User';
+import ShowLikes from './ShowLikes';
 // import FavoriteBorderOutlined from '@mui/icons-material/FavoriteBorderOutlined';
 
 
-const FeedPage = ({caption,Owner,likes}) => {
-    const [like,setLike] =useState(false);
+const FeedPage = ({ caption, Owner, likes, _id }) => {
+    const [like, setLike] = useState(false);
+    const [totalLike, setTotalLike] = useState(likes.length);
+    const id = useSelector((state) => state.user.user._id)
+    useEffect(() => {
+        const liked = likes.find(like => like._id === id)
+        if (liked) {
+            setLike(true)
+        }
+    }, [])
+    const dispatch = useDispatch();
+
+    const [showAllLikes, setShowAllLikes] = useState(false);
+
+
+    const showLikesHandler = () => {
+        setShowAllLikes(!showAllLikes);
+        console.log(showAllLikes)
+    }
+
+
     return (
         <div className='place-self-center mx-20 bg-white my-4'>
             <div id="PostHeader" className='px-4' >
@@ -24,12 +46,21 @@ const FeedPage = ({caption,Owner,likes}) => {
                 <div>
                     <Typography className='p-2 text-gray-400 font-sans'>{caption}</Typography>
                     <div className='flex'>
-                        {like ? <FavoriteIcon className='mx-2 text-red-600' onClick={()=>setLike(!like)}/> : <FavoriteBorderOutlinedIcon className='mx-2' onClick={()=>setLike(!like)}/>}
+                        {like ? <FavoriteIcon className='mx-2 text-red-600' onClick={() => {
+                            setLike(!like)
+                            setTotalLike(totalLike - 1);
+                            dispatch(likeAndDislike(_id))
+                        }} /> : <FavoriteBorderOutlinedIcon className='mx-2' onClick={() => {
+                            setLike(!like)
+                            setTotalLike(totalLike + 1);
+                            dispatch(likeAndDislike(_id))
+                        }} />}
                         <ChatBubbleOutlineOutlinedIcon className='mx-2' />
                         <SendOutlinedIcon className='mx-2' />
                     </div>
-                    {likes.lenght >0?<Typography className='px-2'>{likes.length} - Likes</Typography>:null}
+                    {totalLike > 0 ? <Typography className='px-2 text-slate-700' variant='h7' onClick={() => showLikesHandler()}>{totalLike} likes</Typography> : null}
                     {/* <Typography className='px-2 text-gray-400 font-sans'>THis is comment</Typography> */}
+                    {showAllLikes && <ShowLikes likes={likes} showLikesHandler={showLikesHandler}/>}
                 </div>
 
             </div>

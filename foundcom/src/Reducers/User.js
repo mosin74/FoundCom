@@ -15,6 +15,9 @@ const LoadUserFailure = createAction('LoadUserFailure')
 const AllPostLoadRequest=createAction('AllPostLoadRequest')
 const AllPostLoadSuccess=createAction('AllPostLoadSuccess')
 const AllPostLoadFailure=createAction('AllPostLoadFailure')
+const LikeandDislikeRequest = createAction('LikeandDislikeRequest ')
+const LikeandDislikeSuccess = createAction('LikeandDislikeSuccess ')
+const LikeandDislikeFailure = createAction('LikeandDislikeFailure ')
 
 
 
@@ -85,6 +88,22 @@ export const postofFollowing=createReducer( initialstate , builder=>{
         state.posts=action.payload
     })
     .addCase(AllPostLoadFailure,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload
+    })
+})
+
+
+export const likeAndDislike =createReducer(initialstate , builder=>{
+    builder
+    .addCase(LikeandDislikeRequest ,(state)=>{
+        state.loading=true;
+    })
+    .addCase(LikeandDislikeSuccess ,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload
+    })
+    .addCase(LikeandDislikeFailure ,(state,action)=>{
         state.loading=false;
         state.error=action.payload
     })

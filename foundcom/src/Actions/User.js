@@ -1,4 +1,5 @@
 import axios from "axios"
+// import { useParams } from "react-router-dom"
 
 export const loginUSer = (email, password) => async (dispatch) => {
     try {
@@ -100,5 +101,25 @@ export const loadAllPost = () => async (dispatch) => {
             payload: error
         })
 
+    }
+}
+
+export const likeAndDislike =(params)=>async(dispatch)=>{
+    try {
+        
+        dispatch({
+            type:"LikeandDislikeRequest"
+        })
+
+        const {data}= await axios.get(`/api/v1/post/${params}`)
+        dispatch({
+            type:"LikeandDislikeSuccess",
+            payload:data
+        })
+    } catch (error) {
+        dispatch({
+            type:"LikeandDislikeFailure",
+            payload:error.response.data.message
+        })
     }
 }

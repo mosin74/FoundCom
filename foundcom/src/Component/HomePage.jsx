@@ -20,7 +20,6 @@ const HomePage = () => {
     }, [])
 
     const { posts } = useSelector((state) => state?.feed)
-    console.log(posts)
     return (
         <>
             <div className=' flex mx-2 bg-gray-600 '>
@@ -39,7 +38,7 @@ const HomePage = () => {
                 <div id="midPortion" className='mx-4 w-8/12 bg-gray-500 '>
                     {
                         posts && posts.length > 0 ? posts.map((post) => (
-                            <FeedPage {...post} />
+                            <FeedPage {...post} key={post._id}/>
                             
                         )
                         ) : <h1> Error </h1>
