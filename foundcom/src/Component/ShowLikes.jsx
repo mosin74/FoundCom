@@ -10,10 +10,10 @@ const ShowLikes = ({ likes , showLikesHandler}) => {
         <>
             <div>
                 <div className='fixed left-0 right-0 bottom-0 top-0 bg-black opacity-30 p-0'></div>
-                <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-3 shadow-lg rounded-lg w-4/12 h-3/6'>
+                <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-3 shadow-lg rounded-lg w-4/12 h-3/6 overflow-y-scroll'>
                     <div className='flex justify-between'>
                         <Typography variant='h-3'>Likes</Typography>
-                        <button><CloseIcon onClick={() => showLikesHandler()}  /></button>
+                        <button><CloseIcon onClick={() => showLikesHandler()}  /></button> 
                     </div>
                     <hr className='text-black my-2' />
                     {likes && likes.length > 0 ? likes.map((like) => (

@@ -11,10 +11,14 @@ import { Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { likeAndDislike } from '../Actions/User';
 import ShowLikes from './ShowLikes';
+import AddComment from './AddComment';
+import CreatePost from './CreatePost';
 // import FavoriteBorderOutlined from '@mui/icons-material/FavoriteBorderOutlined';
 
 
-const FeedPage = ({ caption, Owner, likes, _id }) => {
+const FeedPage = ({ caption, Owner, likes, _id, comments }) => {
+    const dispatch = useDispatch();
+
     const [like, setLike] = useState(false);
     const [totalLike, setTotalLike] = useState(likes.length);
     const id = useSelector((state) => state.user.user._id)
@@ -24,15 +28,17 @@ const FeedPage = ({ caption, Owner, likes, _id }) => {
             setLike(true)
         }
     }, [])
-    const dispatch = useDispatch();
-
     const [showAllLikes, setShowAllLikes] = useState(false);
-
-
     const showLikesHandler = () => {
         setShowAllLikes(!showAllLikes);
         console.log(showAllLikes)
     }
+
+    const [showComment, setShowComment] = useState(false);
+    const addCommentHandler = () => {
+        setShowComment(!showComment);
+    }
+
 
 
     return (
@@ -55,12 +61,13 @@ const FeedPage = ({ caption, Owner, likes, _id }) => {
                             setTotalLike(totalLike + 1);
                             dispatch(likeAndDislike(_id))
                         }} />}
-                        <ChatBubbleOutlineOutlinedIcon className='mx-2' />
+                        <ChatBubbleOutlineOutlinedIcon className='mx-2' onClick={() => { addCommentHandler() }} />
                         <SendOutlinedIcon className='mx-2' />
                     </div>
                     {totalLike > 0 ? <Typography className='px-2 text-slate-700' variant='h7' onClick={() => showLikesHandler()}>{totalLike} likes</Typography> : null}
                     {/* <Typography className='px-2 text-gray-400 font-sans'>THis is comment</Typography> */}
-                    {showAllLikes && <ShowLikes likes={likes} showLikesHandler={showLikesHandler}/>}
+                    {showAllLikes && <ShowLikes likes={likes} showLikesHandler={showLikesHandler} />}
+                    {showComment && <AddComment comments={comments} _id={_id} CommentHandler={addCommentHandler} />}
                 </div>
 
             </div>

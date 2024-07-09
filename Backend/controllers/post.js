@@ -233,7 +233,7 @@ exports.AddComments = async(req,res)=>{
        await post.save();
        return res.status(200).json({
         success:true,
-        message:"caption updated"
+        message:"comment updated"
        })
     }
 
