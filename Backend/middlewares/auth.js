@@ -9,7 +9,7 @@ exports.isAuthenticated = async( req,res,next)=>{
    try {
     //Requesting cookies here "cookies parcer" is used
        const {token}=req.cookies;
-       console.log(token)
+      //  console.log(token)
     if(!token){
        return res.status(401).json({
             message:"please login first"

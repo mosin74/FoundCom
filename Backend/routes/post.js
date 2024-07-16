@@ -2,6 +2,8 @@ const express = require('express');
 const { createPost, likeDislikepost, deletPost, getpost, updateCaption, AddComments } = require("../controllers/post");
 const { isAuthenticated } = require('../middlewares/auth');
 
+// const multer=require('multer')
+
 const router = express.Router();
 
 router.route("/post/upload").post(isAuthenticated, createPost);

@@ -26,3 +26,43 @@ export const addCommentAction = (comment, params) => async (dispatch) => {
         })
     }
 }
+
+
+
+export const createPostAction = (image, caption) => async (dispatch) => {
+    try {
+        dispatch({
+            type: 'CreatePostRequest',
+        });
+
+        if (!image) {
+            dispatch({
+                type: 'CreatePostFailure',
+                payload: 'No image provided',
+            });
+            return;
+        }
+
+        const base64String = image.split(',')[1];
+        // console.log("base64String")
+        const response = await axios.post('/api/v1/post/upload', { image: base64String, caption }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        console.log(response.data.message);
+
+        dispatch({
+            type: 'CreatePostSuccess',
+            payload: response.data.message
+        });
+
+    } catch (error) {
+        console.error('Error uploading post:', error.message);
+
+        dispatch({
+            type: 'CreatePostFailure',
+            payload: error.response?.data?.message || error.message,
+        });
+    }
+};
