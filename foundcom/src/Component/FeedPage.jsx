@@ -45,7 +45,7 @@ const FeedPage = ({ caption, Owner, likes, _id, comments }) => {
         <div className='place-self-center mx-20 bg-white my-4'>
             <div id="PostHeader" className='px-4' >
                 <div className='flex justify-between py-4'>
-                    <Link><h4><AccountCircleOutlinedIcon /><span className='p-2'>{Owner.name}</span></h4></Link>
+                    <Link to={`/profile/${Owner.name}`}><h4><AccountCircleOutlinedIcon /><span className='p-2'>{Owner.name}</span></h4></Link>
                     <MoreHorizOutlinedIcon />
                 </div>
                 <img src='https://wallup.net/wp-content/uploads/2016/02/18/290843-mountain-lake-forest.jpg' alt='postHere' className='p-2'></img>
