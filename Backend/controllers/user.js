@@ -1,5 +1,7 @@
 const User = require('../models/User')
-const bcrypt = require('bcrypt')
+const Post=require('../models/Post')
+const bcrypt = require('bcrypt');
+const { default: mongoose } = require('mongoose');
 exports.register = async (req, res) => {
     try {
 
@@ -264,3 +266,40 @@ exports.getAllUsers = async(req,res)=>{
         
     }
 }
+
+  exports.allUserPost = async (req, res) => {
+    try {
+      // Extract and validate user ID from request parameters
+      const userId = req.params.id;
+  
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: 'Invalid User ID' });
+      }
+  
+      console.log("User ID:", userId);
+  
+      // Find the user by their ID
+      const user = await User.findById(userId);
+      console.log("User:", user);
+  
+      if (!user || !user.posts) {
+        return res.status(404).json({ message: 'User or posts not found' });
+      }
+  
+      // Fetch posts for the logged-in user
+      const posts = await Post.find({ owner: userId })
+        .populate('owner')
+        .populate('likes')
+        .populate('comments.user');
+  
+      if (!posts.length) {
+        return res.status(404).json({ message: 'No posts found for this user' });
+      }
+  
+      res.json(posts);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  

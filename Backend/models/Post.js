@@ -8,12 +8,13 @@ const postSchema= new mongoose.Schema({
 
     image:{
         public_id:String,
-        url:String
+        url:String,
     },
 
-    Owner:{
+    owner:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
+        required:true,
     },
     createdAt:{
         type:Date,

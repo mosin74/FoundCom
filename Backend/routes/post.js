@@ -1,6 +1,7 @@
 const express = require('express');
-const { createPost, likeDislikepost, deletPost, getpost, updateCaption, AddComments } = require("../controllers/post");
+const { createPost, likeDislikepost, deletPost, getpost, updateCaption, AddComments} = require("../controllers/post");
 const { isAuthenticated } = require('../middlewares/auth');
+const { allUserPost } = require('../controllers/user');
 
 // const multer=require('multer')
 
@@ -17,5 +18,7 @@ router
 router.route("/posts").get(isAuthenticated, getpost)
 
 router.route("/posts/comment/:id").put(isAuthenticated,AddComments)
+
+router.route("/profile/:id").get(isAuthenticated,allUserPost)
 
 module.exports = router;

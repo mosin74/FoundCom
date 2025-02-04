@@ -18,6 +18,9 @@ const AllPostLoadFailure=createAction('AllPostLoadFailure')
 const LikeandDislikeRequest = createAction('LikeandDislikeRequest ')
 const LikeandDislikeSuccess = createAction('LikeandDislikeSuccess ')
 const LikeandDislikeFailure = createAction('LikeandDislikeFailure ')
+const allUserPostRequest = createAction('allUserPostRequest')
+const allUserPostSuccess = createAction('allUserPostSuccess')
+const allUserPostFailure = createAction('allUserPostFailure')
 
 
 
@@ -107,4 +110,21 @@ export const likeAndDislike =createReducer(initialstate , builder=>{
         state.loading=false;
         state.error=action.payload
     })
+})
+
+export const allUserPost =createReducer(initialstate , builder=>{
+    builder
+    .addCase(allUserPostRequest ,(state)=>{
+        state.loading=true;
+    })
+    .addCase(allUserPostSuccess ,(state,action)=>{
+        state.loading=false;
+        state.posts=action.payload
+    })    
+    .addCase(allUserPostFailure ,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload
+
+    })
+
 })

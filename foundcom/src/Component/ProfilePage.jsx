@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Avatar, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { allUserPost } from '../Reducers/User'
+import { allUserPostAction } from '../Actions/User'
 
 const ProfilePage = () => {
-    const { username } = useParams()
-    console.log(username)
+    const dispatch = useDispatch();
+    const { id } = useParams();
+
+
+    useEffect(() => {
+        if (id) {
+            console.log(id)
+            dispatch(allUserPostAction(id));
+        }
+    }, [dispatch]);
+
+
+    const { posts } = useSelector((state) => state?.profilePost)
+    const {user}=useSelector((state)=>state.user)
+    const logedInUser=user?._id
     return (
         <>
             <div className=' flex mx-2 bg-gray-600  h-max '>
@@ -22,8 +38,8 @@ const ProfilePage = () => {
 
                                 <div className='flex m-auto items-center'>
                                     <h1 className='text-lg mr-4 font-mono'>Username</h1>
-                                    <button className='mr-4 bg-gray-700 p-2 rounded-xl'>Edit Profile</button>
-                                    <button className='mr-4 bg-gray-700 p-2 rounded-xl'>View Archive</button>
+                                    {logedInUser==id && (<button className='mr-4 bg-gray-700 p-2 rounded-xl'>Edit Profile</button>)}
+                                    {logedInUser==id && (<button className='mr-4 bg-gray-700 p-2 rounded-xl'>View Archive</button>)}
                                 </div>
                                 <div className='flex px-4 pt-4 m-auto items-center'>
                                     <h1 className='mr-4  font-light text-sm'>20 Post</h1>
@@ -36,12 +52,12 @@ const ProfilePage = () => {
                         <h1 className='text-center my-2 font-mono text-lg'>Post </h1>
                         <div className='flex flex-wrap'>
 
-                            {[...Array(10)].map((_, index) => (
+                            {posts?.map((post, index) => (
                                 <div key={index} className='w-1/5 p-1'>
                                     <div className='relative overflow-hidden'>
                                         <img
                                             className='object-cover w-full h-72'
-                                            src={`https://source.unsplash.com/random/400x400?sig=${index}`}
+                                            src={post?.image?.url}
                                             alt={`Post ${index}`}
                                         />
                                         <div className='absolute inset-0 bg-black opacity-0 hover:opacity-75 flex items-center justify-center'>

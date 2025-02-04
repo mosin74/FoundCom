@@ -16,7 +16,7 @@ import CreatePost from './CreatePost';
 // import FavoriteBorderOutlined from '@mui/icons-material/FavoriteBorderOutlined';
 
 
-const FeedPage = ({ caption, Owner, likes, _id, comments }) => {
+const FeedPage = ({ caption, owner, likes, _id, comments, image }) => {
     const dispatch = useDispatch();
 
     const [like, setLike] = useState(false);
@@ -27,7 +27,7 @@ const FeedPage = ({ caption, Owner, likes, _id, comments }) => {
         if (liked) {
             setLike(true)
         }
-    }, [])
+    }, [likes ,id])
     const [showAllLikes, setShowAllLikes] = useState(false);
     const showLikesHandler = () => {
         setShowAllLikes(!showAllLikes);
@@ -45,10 +45,11 @@ const FeedPage = ({ caption, Owner, likes, _id, comments }) => {
         <div className='place-self-center mx-20 bg-white my-4'>
             <div id="PostHeader" className='px-4' >
                 <div className='flex justify-between py-4'>
-                    <Link to={`/profile/${Owner.name}`}><h4><AccountCircleOutlinedIcon /><span className='p-2'>{Owner.name}</span></h4></Link>
+                    <Link to={`/profile/${owner._id}`}><h4><AccountCircleOutlinedIcon /><span className='p-2'>{owner.name}</span></h4></Link>
                     <MoreHorizOutlinedIcon />
                 </div>
-                <img src='https://wallup.net/wp-content/uploads/2016/02/18/290843-mountain-lake-forest.jpg' alt='postHere' className='p-2'></img>
+                {/* <img src='https://wallup.net/wp-content/uploads/2016/02/18/290843-mountain-lake-forest.jpg' alt='postHere' className='p-2'></img> */}
+                <img src={image.url} alt="postHere" className='p-2'/>
                 <div>
                     <Typography className='p-2 text-gray-400 font-sans'>{caption}</Typography>
                     <div className='flex'>

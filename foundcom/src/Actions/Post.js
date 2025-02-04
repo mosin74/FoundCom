@@ -31,38 +31,34 @@ export const addCommentAction = (comment, params) => async (dispatch) => {
 
 export const createPostAction = (image, caption) => async (dispatch) => {
     try {
-        dispatch({
-            type: 'CreatePostRequest',
-        });
+        dispatch({ type: "CreatePostRequest" });
 
         if (!image) {
-            dispatch({
-                type: 'CreatePostFailure',
-                payload: 'No image provided',
-            });
-            return;
+            // console.log("No image")
+            dispatch({ type: "CreatePostFailure", payload: "No image provided" });
+            return null; 
         }
 
-        const base64String = image.split(',')[1];
-        // console.log("base64String")
-        const response = await axios.post('/api/v1/post/upload', { image: base64String, caption }, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-        console.log(response.data.message);
+        const base64String = image.split(",")[1];
+        console.log(base64String);
 
-        dispatch({
-            type: 'CreatePostSuccess',
-            payload: response.data.message
+        const response = await axios.post("/api/v1/post/upload", { 
+            image: base64String, 
+            caption 
+            
+        }, {
+            headers: { "Content-Type": "application/json" }
         });
+
+        dispatch({ type: "CreatePostSuccess", payload: "Post created SuccessFully" });
+        
+        return response;
 
     } catch (error) {
-        console.error('Error uploading post:', error.message);
+        const errorMessage = error.response?.data?.message || "Failed to create post";
+        
+        dispatch({ type: "CreatePostFailure", payload: errorMessage });
 
-        dispatch({
-            type: 'CreatePostFailure',
-            payload: error.response?.data?.message || error.message,
-        });
+        return errorMessage; // Ensure null is returned on failure
     }
 };

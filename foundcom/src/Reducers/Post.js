@@ -34,6 +34,7 @@ export const createPostReducer = createReducer(initialstate, builder => {
         .addCase(CreatePostSuccess, (state, action) => {
             state.loading = false;
             state.message = action.payload
+            console.log(state.message)
         })
         .addCase(CreatePostFailure, (state, action) => {
             state.loading = false;

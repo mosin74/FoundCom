@@ -29,7 +29,7 @@ const appRouter = createBrowserRouter([
     element: <RegisterUser />
   },
   {
-    path: '/profile/:username',
+    path: '/profile/:id',
     Component: () => {
       const dispatch = useDispatch();
       useEffect(() => {

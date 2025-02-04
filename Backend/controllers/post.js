@@ -62,53 +62,57 @@ const cloudinary = require('cloudinary').v2;
 // chat  GPT
 exports.createPost = async (req, res) => {
     try {
-
-        // Convert the base64 string to a buffer
         const buffer = Buffer.from(req.body.image, 'base64');
-        
         console.log("Buffer is created");
 
-        // Upload the image to Cloudinary
-        cloudinary.uploader.upload_stream({ folder: 'posts' }, async (error, result) => {
-            console.log("Entered in uploader");
-            if (error) {
-                return res.status(500).json({ success: false, message: error.message });
-            }
-            console.log("Img uploaded success");
+        // Upload the image to Cloudinary using a Promise
+        const uploadPromise = new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                { folder: 'posts' },
+                (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+            uploadStream.end(buffer);
+        });
 
-            const newPostData = {
-                caption: req.body.caption,
-                image: {
-                    public_id: result.public_id,
-                    url: result.secure_url,
-                },
-                owner: req.user._id,
-            };
+        const result = await uploadPromise;
+        // console.log("Img uploaded success", result);
 
-            // Create a new post
-            const post = await Post.create(newPostData);
-            console.log("Post created");
+        const newPostData = {
+            caption: req.body.caption,
+            image: {
+                public_id: result.public_id,
+                url: result.secure_url,
+            },
+            owner: req.user._id,
+        };
 
-            // Get the user by ID
-            const user = await User.findById(req.user._id);
+        const post = await Post.create(newPostData);
+        console.log("Post created");
 
-            // Push the new post ID to the user's posts array and save the user
-            user.posts.push(post._id);
-            await user.save();
-            console.log("Saved");
+        const user = await User.findById(req.user._id);
+        user.posts.push(post._id);
+        await user.save();
+        console.log("Saved");
 
-            res.status(200).json({
-                success: true,
-                post,
-            });
-        }).end(buffer);
+        res.status(200).json({
+            success: true,
+            post,
+        });
     } catch (error) {
+        console.error("Error:", error);
         res.status(500).json({
             success: false,
             message: error.message,
         });
     }
 };
+
 
 
 
@@ -171,7 +175,7 @@ exports.deletPost = async (req, res) => {
         }
 
 
-        if (post.Owner.toString() != req.user._id.toString()) {
+        if (post.owner.toString() != req.user._id.toString()) {
             return res.status(401).json({
                 sucess: false,
                 message: "Unauthorized"
@@ -213,42 +217,31 @@ exports.deletPost = async (req, res) => {
 }
 
 exports.getpost = async (req, res) => {
-
     try {
+        console.log('Fetching user data...');
+        const user = req.user;
+        console.log('User:', user);
 
-        // ==> This is 1 approch 
-        //   const user=await User.findById(req.user._id).populate("following","posts")
-        // //   const post=await Post.find({})
-        // res.status(200).json({
-        //     success:true,
-        //     // user
-        //     following:user.following
-        // })
+        if (!user || !user.following) {
+            return res.status(400).json({ message: 'User or following data is missing' });
+        }
 
-        // ==> This is 2 approch 
-        const user = await User.findById(req.user._id);
+        console.log('User following:', user.following);
+
         const posts = await Post.find({
-            Owner: {
-                $in: user.following
-            }
-        }).populate("Owner likes comments.user")
-        res.status(200).json({
-            success: true,
-            posts
-        })
+            owner: { $in: user.following },
+        }).populate('owner likes comments.user');
 
+        console.log('Posts fetched:', posts);
 
-
-
+        res.status(200).json({ success: true, posts });
     } catch (error) {
-
-        return res.status(500).json({
-            sucess: false,
-            message: error.message
-        })
-
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ success: false, message: error.message });
     }
 }
+
+
 
 
 exports.updateCaption = async (req, res) => {

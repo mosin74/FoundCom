@@ -123,3 +123,24 @@ export const likeAndDislike =(params)=>async(dispatch)=>{
         })
     }
 }
+
+export const allUserPostAction=(params)=> async(dispatch)=>{
+
+    try {
+        dispatch({
+            type:"allUserPostRequest"
+        })
+
+        const {data}= await axios.get(`/api/v1/profile/${params}`)
+        dispatch({
+            type:"allUserPostSuccess",
+            payload:data
+        })
+    } catch (error) {
+        dispatch({
+            type:"allUserPostFailure",
+            payload:error.response.data.message
+        })
+    }
+
+}
